@@ -19,6 +19,13 @@ export default {
             state.todos=state.todos.filter(todo=>{
                 return todo.id!=removeId
             })
+        },
+        updateTd(state,todo){
+            state.todos.foreach(t=>{
+                if(t.id===todo.id){
+                    t=todo
+                }
+            })
         }
     },
     actions:{
@@ -34,6 +41,14 @@ export default {
        async deleteTodo(context,removeId){
            await axios.delete(`https://jsonplaceholder.typicode.com/todos/${removeId}`);
            context.commit('removeTodo',removeId)
+       },
+       async filterTodos(context,limit){
+         let res = await axios.get(`https://jsonplaceholder.typicode.com/todos/?_limit=${limit}`);
+         context.commit('setTodos',res.data)
+       },
+       async updateTodo(context,todo){
+        let res= await axios.put(`https://jsonplaceholder.typicode.com/todos/${todo.id}`,todo);
+        context.commit('updateTd',todo)
        }
     }
 }
